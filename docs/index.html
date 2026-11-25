@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>BirdRoute</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <section class="panel" aria-label="Trip and stops">
+    <h1>BirdRoute</h1>
+    <section class="list-card" aria-labelledby="key-h">
+      <h2 id="key-h">Your eBird key</h2>
+      <form id="key-form">
+        <p><a href="https://ebird.org/api/keygen" target="_blank" rel="noopener">Get a free key from eBird</a>, then paste it here.</p>
+        <label for="key">eBird API key</label>
+        <input id="key" name="key" type="text" required autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="done">
+        <p><button type="submit">Save the key</button></p>
+      </form>
+      <p id="key-full" class="links" hidden><span>Key saved on this device.</span> <button type="button" id="key-clear" class="linky">Remove it</button></p>
+      <p class="muted">Kept only in this browser and sent only to eBird.</p>
+    </section>
+    <section class="list-card" aria-labelledby="list-h">
+      <h2 id="list-h">Your life list</h2>
+      <div id="list-empty">
+        <p><a id="ebird-dl" href="https://ebird.org/lifelist?r=world&amp;time=life&amp;fmt=csv" target="_blank" rel="noopener">Download your life list from eBird</a>, then choose the file here.</p>
+        <label class="button" for="csv">Choose the eBird CSV</label>
+      </div>
+      <div id="list-full" hidden>
+        <p id="list-count"></p>
+        <p class="links"><a class="linky" href="https://ebird.org/lifelist?r=world&amp;time=life&amp;fmt=csv" target="_blank" rel="noopener">Download a fresh list</a> <label for="csv" class="linky">Replace</label> <button type="button" id="forget" class="linky">Forget it</button></p>
+      </div>
+      <input id="csv" type="file" accept=".csv,text/csv" class="visually-hidden">
+      <p class="muted">Read in your browser and kept only on this device. Never uploaded.</p>
+      <p id="list-msg" role="status"></p>
+    </section>
+    <search>
+      <form id="form">
+        <label for="from">Start</label>
+        <input id="from" name="from" required autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="next">
+        <label for="to">End</label>
+        <input id="to" name="to" required autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="search">
+        <p class="muted">A place, an address, or “lat, lon”.</p>
+        <fieldset>
+          <legend>Search settings</legend>
+          <div class="grid">
+            <div><label for="detour">Most extra driving (min)</label><input id="detour" name="detour" type="number" min="0" max="180" step="5" value="30" required></div>
+            <div><label for="width">Distance off route (km)</label><input id="width" name="width" type="number" min="2" max="40" value="10" required></div>
+            <div><label for="back">Seen in the last (days)</label><input id="back" name="back" type="number" min="1" max="30" value="14" required></div>
+          </div>
+          <p class="check"><input id="provisional" name="provisional" type="checkbox" checked> <label for="provisional">Include unconfirmed sightings</label></p>
+          <p class="check"><input id="personal" name="personal" type="checkbox"> <label for="personal">Include personal locations (may be private land)</label></p>
+        </fieldset>
+        <button type="submit" id="go">Find lifers on this route</button>
+      </form>
+    </search>
+    <div id="progress" hidden><label for="bar" id="step"></label><progress id="bar"></progress></div>
+    <p id="message" role="status"></p>
+    <div id="results" hidden>
+      <div class="toolbar">
+        <label for="sort">Sort stops by</label>
+        <select id="sort"><option value="score">Best value</option><option value="lifers">Most lifers</option><option value="detour">Shortest detour</option><option value="route">Order along the route</option></select>
+      </div>
+      <p><a id="gmaps" class="button" target="_blank" rel="noopener">Open in Google Maps</a> <span id="picked" class="muted"></span></p>
+      <ol id="stops"></ol>
+      <details id="funnel"><summary>What was left out</summary><ul></ul></details>
+    </div>
+  </section>
+  <div id="map" role="region" aria-label="Map of the route and stops"></div>
+</main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>
